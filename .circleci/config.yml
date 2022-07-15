@@ -32,6 +32,7 @@ commands:
           command: "sls plugin install --name serverless-python-requirements"
       - run:
           name: install stream arn plugin
+          #TODO: [SAR-117] resolve dependency for dynamodb-stream-arn-plugin
           command: "npm install --save-dev serverless-dynamodb-stream-arn-plugin --force"
   authenticate_serverless:
     description: authenticate serverles
