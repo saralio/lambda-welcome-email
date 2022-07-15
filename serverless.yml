@@ -1,0 +1,59 @@
+service: lambda-welcome-email
+frameworkVersion: '3'
+
+plugins:
+  - serverless-python-requirements
+  - serverless-dynamodb-stream-arn-plugin
+custom:
+  pythonRequirements:
+    slim: true
+    dockerizePip: true
+    useDownloadCache: false 
+    useStaticCache: false 
+    fileName: ./requirements/requirements-${env:BRANCH_NAME}.txt
+
+package:
+  individually: true
+  patterns:
+    - ".github/"
+    - "__pycache__/**"
+    - "README.md"
+    - "archive"
+    - ".circleci"
+    - "node_modules"
+    - "response.json"
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: ${env:MY_ENV}
+  region: ${env:MY_REGION}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ses:*
+            - dynamodb:*
+            - events:*
+          Resource: "*"
+
+
+functions:
+  welcomer:
+    handler: handler.emailer
+    maximumRetryAttempts: 1
+    memorySize: 512
+    environment:
+      MY_ENV: ${env:MY_ENV}
+      MY_REGION: ${env:MY_REGION}
+    events:
+      - stream:
+          type: dynamodb
+          arn: ${fetchStreamARN(registered-users-${env:MY_ENV})}
+          maximumRetryAttempts: 1
+          filterPatterns:
+            - eventName: [INSERT, MODIFY]
+          maximumRecordAgeInSeconds: 60
+          startingPosition: LATEST
+

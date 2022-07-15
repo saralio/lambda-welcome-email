@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "serverless-dynamodb-stream-arn-plugin": "^0.0.6",
+    "serverless-python-requirements": "^5.4.0"
+  },
+  "dependencies": {
+    "serverless": "^3.21.0"
+  }
+}
