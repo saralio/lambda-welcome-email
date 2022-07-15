@@ -1,7 +1,19 @@
+import markdown
 from typing import Union, List
 from saral_utils.utils.env import create_env_api_url, get_env_var
 from saral_utils.extractor.dynamo import DynamoDB
-import urllib
+
+def generate_html(txts: List[str]) -> str:
+    """Given a list of strings, concatenates them and convert markdown into html strings
+
+    Args:
+        txts (List[str]): List of markdown strings
+
+    Returns:
+        str: A single string in html format
+    """    
+    email_str = "\n\n".join(txts)
+    return markdown.markdown(email_str)
 
 def generate_links(email_id):
     twitter_account_link = "https://twitter.com/data_question"
