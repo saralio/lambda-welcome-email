@@ -1,9 +1,7 @@
 from datetime import datetime
-from utils import generate_links, get_total_registered_users, send_mail
-from saral_utils.utils.env import create_env_api_url, get_env_var
-from saral_utils.extractor.dynamo import DynamoDB
+from utils import generate_html, generate_links, get_total_registered_users, send_mail
+from saral_utils.utils.env import get_env_var
 import urllib
-import markdown
 import boto3
 
 def emailer(event, context):
@@ -50,32 +48,41 @@ def emailer(event, context):
 
         print('event bridge rule created and target created')
 
+        # sending emails
+        ses_client = boto3.client('ses')
+        links = generate_links(email_id=email_id)
+        tweet = f'Check out {links["saral_website_link"]}. You can subscribe to receive a daily question on #RStats programming directly in your inbox'
+        sharing_link = f'{links["base_sharing_link"]}{urllib.parse.quote_plus(tweet)}' #type:ignore
+        footer =  f"*Please consider supporting us by [sharing]({sharing_link}) or by making a [donation]({links['donation_link']}). Your contribution, helps us to keep the services afloat. To unsubscribe click [here]({links['unsubscribe_link']}).*"
+
+        # email text for new user
+        welcome_body = [ 
+            f"# Welcome to [#RStats Question a Day]({links['twitter_account_link']})",
+            "We are glad to be a part of your journey of learning R.",
+            f"R is a wonderful programming language with even more wonderful community with wonderful people. To join the conversation, simply head on to twitter and follow the hashtag [#RStats]({links['twitter_hashtag_link']}).",
+            f"As a part of this email service, you will receive a question, daily at {email_send_time}. If you wish to change the time, you can resubscribe [here]({links['saral_website_link']})",
+            f"Thanks,  \n[Mohit]({links['personal_account_link']})",
+            footer
+        ]
+
+        # email text for confirming updated time
+        time_change_body = [
+            f"### Time updated successfully!",
+            f"Now, you will receive a new question on R programming language, daily at {email_send_time}",
+            f"Thanks,  \n[Saral]({links['twitter_account_link']})",
+            footer
+        ]
+
         if event_name == 'INSERT':
-            print(f'event name is {event_name}, hence sending emails')
+            print(f'event name is {event_name}, hence sending update emails')
 
-            links = generate_links(email_id=email_id)
-            tweet = f'Check out {links["saral_website_link"]}. You can subscribe to receive a daily question on #RStats programming directly in your inbox'
-            sharing_link = f'{links["base_sharing_link"]}{urllib.parse.quote_plus(tweet)}' #type:ignore
-            email_body = [ 
-                f"# Welcome to [#RStats Question a Day]({links['twitter_account_link']})",
-                "We are glad to be a part of your journey of learning R.",
-                f"R is a wonderful programming language with even more wonderful community with wonderful people. To join the conversation, simply head on to twitter and follow the hashtag [#RStats]({links['twitter_hashtag_link']}).",
-                f"As a part of this email service, you will receive a question, daily at {email_send_time}. If you wish to change the time, you can resubscribe [here]({links['saral_website_link']})",
-                f"Thanks,  \n[Mohit]({links['personal_account_link']})",
-                f"*Please consider supporting us by [sharing]({sharing_link}) or by making a [donation]({links['donation_link']}). Your contribution, helps us to keep the services afloat. To unsubscribe click [here]({links['unsubscribe_link']}).*",
-            ]
-
-            email_body_str = "\n\n".join(email_body)
-            html = markdown.markdown(email_body_str)
-
-            ses_client = boto3.client('ses')
-
-            # send email to user
+            # send welcome email to user
+            welcome_html = generate_html(welcome_body)
             response = send_mail(
                 ses_client=ses_client, 
                 to=email_id, 
                 frm="Saral<welcome@saral.club>", 
-                body=html, 
+                body=welcome_html, 
                 body_type='html', 
                 subject='Welcome to #RStats Question A Day'
             )
@@ -95,6 +102,17 @@ def emailer(event, context):
             print('info mail send to saral')
         else:
             print(f'event name is {event_name}, skipping sending emails')
+            
+            # send confirmation mail of time update
+            time_change_html = generate_html(time_change_body)
+            response = send_mail(
+                ses_client=ses_client,
+                to=email_id, 
+                frm="Saral<support@saral.club>",
+                body=time_change_html,
+                subject="Time Changed",
+                body_type="html"
+            )
             
     return {
         'statusCode': 200
