@@ -1,0 +1,14 @@
+{
+    "Records": [
+        {
+            "eventName": "INSERT",
+            "dynamodb": {
+                "NewImage": {
+                    "emailId": {"S": "info@saral.club"},
+                    "emailSendTime": {"S": "09:00"},
+                    "emailSendTimeZone": {"S": "INT"}
+                }
+            }
+        }
+    ]
+}
