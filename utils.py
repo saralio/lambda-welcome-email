@@ -1,6 +1,6 @@
 import markdown
 from typing import Union, List
-from saral_utils.utils.env import create_env_api_url, get_env_var
+from saral_utils.utils.env import get_env_var
 from saral_utils.extractor.dynamo import DynamoDB
 
 def generate_html(txts: List[str]) -> str:
