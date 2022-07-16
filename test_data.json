@@ -5,7 +5,7 @@
             "dynamodb": {
                 "NewImage": {
                     "emailId": {"S": "info@saral.club"},
-                    "emailSendTime": {"S": "09:00"},
+                    "emailSendTime": {"S": "18:20"},
                     "emailSendTimeZone": {"S": "INT"}
                 }
             }

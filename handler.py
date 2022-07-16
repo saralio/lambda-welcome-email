@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from utils import generate_html, get_total_registered_users, send_mail
 from saral_utils.utils.env import get_env_var
 from saral_utils.utils.frontend import ShareLinks
@@ -11,19 +11,18 @@ def emailer(event, context):
     region = get_env_var("MY_REGION")
 
     records = event['Records']
-    #TODO: [SAR-116] parse emailSendTime and emailSendTimeZone properly
     for record in records:
         event_name = record['eventName']
         value = record['dynamodb']['NewImage']
         email_id = value['emailId']['S']
-        email_send_time_zone = value['emailSendTimeZone']['S']
         email_send_time = value['emailSendTime']['S']
+        email_send_timezone_offset = int(value['emailSendTimeZoneOffset']) # local_time - utc = offset
 
         # put event bridge rule
+        rule_time = datetime.strptime(email_send_time, '%H:%M') - timedelta(minutes=email_send_timezone_offset) # local_time - offset = send_time - timezone_offset
         rule_name = f'RuleFor_{email_id.replace("@", "_").replace(".", "_")}'
         print(f'putting rule for {email_id} with rule name: {rule_name} at time {email_send_time}')
-        time = datetime.strptime(email_send_time, '%H:%M')
-        cron_expr = f'{time.minute} {time.hour} * * ? *'
+        cron_expr = f'{rule_time.minute} {rule_time.hour} * * ? *'
         print(f'cron expression: {cron_expr}')
 
         # create rule
