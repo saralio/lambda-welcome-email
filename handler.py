@@ -16,7 +16,7 @@ def emailer(event, context):
         value = record['dynamodb']['NewImage']
         email_id = value['emailId']['S']
         email_send_time = value['emailSendTime']['S']
-        email_send_timezone_offset = int(value['emailSendTimeZoneOffset']) # local_time - utc = offset
+        email_send_timezone_offset = int(value['emailSendTimeZoneOffset']['S']) # local_time - utc = offset
 
         # put event bridge rule
         rule_time = datetime.strptime(email_send_time, '%H:%M') - timedelta(minutes=email_send_timezone_offset) # local_time - offset = send_time - timezone_offset
