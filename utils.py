@@ -15,25 +15,6 @@ def generate_html(txts: List[str]) -> str:
     email_str = "\n\n".join(txts)
     return markdown.markdown(email_str)
 
-def generate_links(email_id):
-    twitter_account_link = "https://twitter.com/data_question"
-    twitter_hashtag_link = "https://twitter.com/search?q=%23RStats"
-    saral_website_link = "https://saral.club"
-    sharing_link = f'https://twitter.com/intent/tweet?text=' #type:ignore
-    donation_link = 'https://www.buymeacoffee.com/NgFs2zX'
-    my_account_link = 'https://twitter.com/mohitsh48631107'
-    unsubscribe_link = create_env_api_url(url=f'deregister.saral.club/emailId/{email_id}')
-
-    return {
-        'twitter_account_link': twitter_account_link,
-        'twitter_hashtag_link': twitter_hashtag_link,
-        'saral_website_link': saral_website_link,
-        'base_sharing_link': sharing_link,
-        'donation_link': donation_link,
-        'personal_account_link': my_account_link,
-        'unsubscribe_link': unsubscribe_link
-    }
-
 def get_total_registered_users():
     env = get_env_var("MY_ENV")
     region = get_env_var("MY_REGION")
