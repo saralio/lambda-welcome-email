@@ -6,7 +6,7 @@
                 "NewImage": {
                     "emailId": {"S": "info@saral.club"},
                     "emailSendTime": {"S": "18:20"},
-                    "emailSendTimeZone": {"S": "INT"},
+                    "emailSendTimeZone": {"S": "Asia/Calcutta"},
                     "emailSendTimeZoneOffset": {"S": "330"}
                 }
             }
