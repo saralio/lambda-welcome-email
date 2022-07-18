@@ -76,7 +76,7 @@ def emailer(event, context):
         # email text for confirming updated time
         time_change_body = [
             f"### Time updated successfully!",
-            f"Now, you will receive a new question on R programming language, daily at {email_send_time}",
+            f"Now, you will receive a new question on R programming language, daily at {email_send_time} hrs.",
             f"Thanks,  \n[Saral]({twitter_account_link})",
             footer
         ]
