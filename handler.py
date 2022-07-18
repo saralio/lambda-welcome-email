@@ -68,7 +68,7 @@ def emailer(event, context):
             f"# Welcome to [#RStats Question a Day]({twitter_account_link})",
             "We are glad to be a part of your journey of learning R.",
             f"R is a wonderful programming language with even more wonderful community with wonderful people. To join the conversation, simply head on to twitter and follow the hashtag [#RStats]({twitter_hashtag_link}).",
-            f"As a part of this email service, you will receive a question, daily at {email_send_time}. If you wish to change the time, you can resubscribe [here]({website_link})",
+            f"As a part of this email service, you will receive a question, daily at {email_send_time} hrs. If you wish to change the time, you can resubscribe [here]({website_link})",
             f"Thanks,  \n[Mohit]({personal_account_link})",
             footer
         ]
