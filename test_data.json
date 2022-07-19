@@ -1,0 +1,26 @@
+{
+    "Records": [
+        {
+            "eventName": "INSERT",
+            "dynamodb": {
+                "NewImage": {
+                    "emailId": {"S": "info@saral.club"},
+                    "emailSendTime": {"S": "18:20"},
+                    "emailSendTimeZone": {"S": "Asia/Calcutta"},
+                    "emailSendTimeZoneOffset": {"S": "330"}
+                }
+            }
+        },
+        {
+            "eventName": "MODIFY",
+            "dynamodb": {
+                "NewImage": {
+                    "emailId": {"S": "report@saral.club"},
+                    "emailSendTime": {"S": "19:00"},
+                    "emailSendTimeZone": {"S": "Asia/Calcutta"},
+                    "emailSendTimeZoneOffset": {"S": "330"}
+                }
+            }
+        }
+    ]
+}
