@@ -61,6 +61,7 @@ commands:
     steps:
       - run: pip3 install -r ./requirements/requirements-<< parameters.branch_name >>.txt
       - run: |
+          sls invoke local -f welcomer -p test_data.json
           statusCode=$(sls invoke local -f welcomer -p test_data.json 2>/dev/null | tail -3 | python3 -c 'import sys,json; print(json.load(sys.stdin)["statusCode"])')
           if [[ $statusCode != 200 ]]; then 
             echo lambda build failed with statuscode $statusCode
