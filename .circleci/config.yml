@@ -20,6 +20,7 @@ commands:
       - run: |
           cat requirements/requirements-develop.txt > requirements/requirements-master.txt
           cat requirements/requirements-develop.txt > requirements/requirements-stg.txt
+          sed -i '/^git+https/ s/develop/master/g' requirements/requirements-master.txt
   setup_serverless:
     description: setup serverless
     steps:
