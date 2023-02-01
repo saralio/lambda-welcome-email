@@ -53,7 +53,7 @@ functions:
           arn: ${fetchStreamARN(registered-users-${env:MY_ENV})}
           maximumRetryAttempts: 1
           filterPatterns:
-            - eventName: [INSERT, MODIFY]
+            - eventName: [INSERT]
           maximumRecordAgeInSeconds: 60
           startingPosition: LATEST
 
